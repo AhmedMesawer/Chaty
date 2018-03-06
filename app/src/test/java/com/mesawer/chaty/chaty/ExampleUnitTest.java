@@ -2,6 +2,7 @@ package com.mesawer.chaty.chaty;
 
 import org.junit.Test;
 
+import static com.mesawer.chaty.chaty.utils.StringUtil.isValidEmailAddress;
 import static org.junit.Assert.*;
 
 /**
@@ -12,6 +13,6 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+        assertTrue( isValidEmailAddress("ahmed-mesawer@gm-ail.com.eg"));
     }
 }
