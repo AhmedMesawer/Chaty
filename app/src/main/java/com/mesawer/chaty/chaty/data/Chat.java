@@ -5,4 +5,5 @@ package com.mesawer.chaty.chaty.data;
  */
 
 public class Chat {
+
 }

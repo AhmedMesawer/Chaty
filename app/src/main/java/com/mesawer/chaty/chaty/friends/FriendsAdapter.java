@@ -53,6 +53,16 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
         return friends.size();
     }
 
+    public void setFriends(List<User> friends){
+        this.friends = friends;
+        notifyDataSetChanged();
+    }
+
+    public void add(User friend){
+        this.friends.add(friend);
+        notifyDataSetChanged();
+    }
+
     class FriendsViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.friend_name_text_view)

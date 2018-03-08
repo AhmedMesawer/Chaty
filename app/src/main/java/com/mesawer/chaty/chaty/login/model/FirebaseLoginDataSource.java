@@ -12,6 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.mesawer.chaty.chaty.base.FailedResponseCallback;
 import com.mesawer.chaty.chaty.base.SuccessfulResponseWithResultCallback;
 import com.mesawer.chaty.chaty.data.User;
+import com.mesawer.chaty.chaty.utils.Injection;
 
 /**
  * Created by ilias on 05/03/2018.
@@ -24,8 +25,8 @@ public class FirebaseLoginDataSource implements LoginDataSource {
     private DatabaseReference database;
 
     private FirebaseLoginDataSource() {
-        auth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance().getReference().child("users");
+        auth = Injection.provideFirebaseAuth();
+        database = Injection.provideFirebaseDatabaseReference().child("users");
     }
 
     public static FirebaseLoginDataSource getInstance() {
@@ -59,4 +60,6 @@ public class FirebaseLoginDataSource implements LoginDataSource {
                 })
                 .addOnFailureListener(e -> failedCallback.onError(e.getMessage()));
     }
+
+    //TODO don't forget to remove any added listeners
 }

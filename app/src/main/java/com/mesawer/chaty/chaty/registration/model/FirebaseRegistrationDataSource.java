@@ -9,6 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mesawer.chaty.chaty.base.FailedResponseCallback;
 import com.mesawer.chaty.chaty.base.SuccessfulResponseWithResultCallback;
 import com.mesawer.chaty.chaty.data.User;
+import com.mesawer.chaty.chaty.utils.Injection;
 
 import java.util.UUID;
 
@@ -23,8 +24,8 @@ public class FirebaseRegistrationDataSource implements RegistrationDataSource {
     private DatabaseReference database;
 
     private FirebaseRegistrationDataSource() {
-        auth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance().getReference().child("users");
+        auth = Injection.provideFirebaseAuth();
+        database = Injection.provideFirebaseDatabaseReference().child("users");
     }
 
     public static FirebaseRegistrationDataSource getInstance() {

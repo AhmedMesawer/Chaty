@@ -1,5 +1,9 @@
 package com.mesawer.chaty.chaty.utils;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.mesawer.chaty.chaty.friends.model.FirebaseFriendsRepository;
 import com.mesawer.chaty.chaty.login.model.FirebaseLoginDataSource;
 import com.mesawer.chaty.chaty.registration.model.FirebaseRegistrationDataSource;
 
@@ -9,8 +13,20 @@ import com.mesawer.chaty.chaty.registration.model.FirebaseRegistrationDataSource
 
 public class Injection {
 
+    public static FirebaseAuth provideFirebaseAuth(){
+        return FirebaseAuth.getInstance();
+    }
+
+    public static DatabaseReference provideFirebaseDatabaseReference(){
+        return FirebaseDatabase.getInstance().getReference();
+    }
+
     public static FirebaseRegistrationDataSource provideFirebaseRegistrationDataSource(){
         return FirebaseRegistrationDataSource.getInstance();
+    }
+
+    public static FirebaseFriendsRepository provideFirebaseFriendsRepository(){
+        return FirebaseFriendsRepository.getInstance();
     }
 
     public static FirebaseLoginDataSource provideFirebaseLoginDataSource(){

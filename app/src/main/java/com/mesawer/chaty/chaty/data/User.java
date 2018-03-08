@@ -28,7 +28,10 @@ public class User implements Parcelable {
         this.email = email;
         this.password = password;
         friends = new ArrayList<>();
-//        friends.add("");
+        friends.add("friend 1");
+        friends.add("friend 2");
+        friends.add("friend 3");
+        friends.add("friend 4");
         chats = new ArrayList<>();
 //        chats.add("");
     }
