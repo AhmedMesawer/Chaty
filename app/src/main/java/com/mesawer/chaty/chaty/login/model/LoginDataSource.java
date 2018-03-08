@@ -12,4 +12,6 @@ public interface LoginDataSource {
     void login(String email, String password,
                SuccessfulResponseWithResultCallback<User> resultCallback,
                FailedResponseCallback failedCallback);
+
+//    void getAuthState();
 }

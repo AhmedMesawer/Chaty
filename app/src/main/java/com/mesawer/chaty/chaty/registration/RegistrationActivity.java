@@ -1,21 +1,22 @@
 package com.mesawer.chaty.chaty.registration;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.mesawer.chaty.chaty.R;
 import com.mesawer.chaty.chaty.base.BaseActivity;
 import com.mesawer.chaty.chaty.data.User;
+import com.mesawer.chaty.chaty.main.MainActivity;
 import com.mesawer.chaty.chaty.utils.Injection;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.mesawer.chaty.chaty.main.MainActivity.USER_INTENT_KEY;
 import static com.mesawer.chaty.chaty.utils.StringUtil.isNullOrEmpty;
 import static com.mesawer.chaty.chaty.utils.StringUtil.isValidEmailAddress;
 import static com.mesawer.chaty.chaty.utils.StringUtil.notNullOrEmpty;
@@ -48,7 +49,10 @@ public class RegistrationActivity extends BaseActivity implements RegistrationCo
 
     @Override
     public void navigateToMainActivity(User user) {
-
+        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+        intent.putExtra(USER_INTENT_KEY, user);
+        startActivity(intent);
+        finish();
     }
 
     @OnClick(R.id.btn_sign_up)
