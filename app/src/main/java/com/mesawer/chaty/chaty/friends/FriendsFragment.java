@@ -1,18 +1,23 @@
 package com.mesawer.chaty.chaty.friends;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.mesawer.chaty.chaty.R;
+import com.mesawer.chaty.chaty.add_friend.AddFriendActivity;
 import com.mesawer.chaty.chaty.base.BaseFragment;
 import com.mesawer.chaty.chaty.data.User;
 import com.mesawer.chaty.chaty.utils.Injection;
@@ -22,9 +27,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.mesawer.chaty.chaty.main.MainActivity.USER_INTENT_KEY;
+import static com.mesawer.chaty.chaty.main.MainActivity.CURRENT_USER_INTENT_KEY;
+import static com.mesawer.chaty.chaty.main.MainActivity.SHARED_PREFERENCES_FILE_KEY;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +48,9 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
     @BindView(R.id.friends_fragment_layout)
     FrameLayout friendsFragmentLayout;
     FriendsContract.Presenter friendPresenter;
+    @BindView(R.id.floatingActionButton)
+    FloatingActionButton floatingActionButton;
+    private SharedPreferences preferences;
 
     public FriendsFragment() {
         // Required empty public constructor
@@ -65,11 +75,11 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
         super.onActivityCreated(savedInstanceState);
         Intent intent = getActivity().getIntent();
         if (intent != null) {
-            user = intent.getParcelableExtra(USER_INTENT_KEY);
+            user = intent.getParcelableExtra(CURRENT_USER_INTENT_KEY);
             if (user != null) {
                 friendPresenter.getFriends(user);
             }
-        }
+       }
     }
 
     @Override
@@ -88,10 +98,36 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
 
     }
 
+    @Override
+    public void navigateToAddFriendActivity() {
+        Intent intent = new Intent(getActivity(), AddFriendActivity.class);
+        intent.putExtra(CURRENT_USER_INTENT_KEY, user);
+        startActivity(intent);
+    }
+
     private void setupFriendsRecyclerView() {
         llm = new LinearLayoutManager(getContext());
         friendsAdapter = new FriendsAdapter(new ArrayList<>());
         friendsRv.setLayoutManager(llm);
         friendsRv.setAdapter(friendsAdapter);
+    }
+
+    private void saveStateInPreferences(String key, Object value) {
+        preferences = getActivity().getSharedPreferences(SHARED_PREFERENCES_FILE_KEY,
+                Context.MODE_PRIVATE);
+        if (preferences != null) {
+            SharedPreferences.Editor editor = preferences.edit();
+            if (value instanceof String) {
+                editor.putString(key, (String) value);
+            } else if (value instanceof Boolean) {
+                editor.putBoolean(key, (Boolean) value);
+            }
+            editor.apply();
+        }
+    }
+
+    @OnClick(R.id.floatingActionButton)
+    public void onViewClicked() {
+        navigateToAddFriendActivity();
     }
 }

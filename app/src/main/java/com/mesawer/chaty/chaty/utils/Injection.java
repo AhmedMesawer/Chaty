@@ -3,6 +3,7 @@ package com.mesawer.chaty.chaty.utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mesawer.chaty.chaty.add_friend.model.FirebaseAddFriendsRepository;
 import com.mesawer.chaty.chaty.friends.model.FirebaseFriendsRepository;
 import com.mesawer.chaty.chaty.login.model.FirebaseLoginDataSource;
 import com.mesawer.chaty.chaty.registration.model.FirebaseRegistrationDataSource;
@@ -23,6 +24,10 @@ public class Injection {
 
     public static FirebaseRegistrationDataSource provideFirebaseRegistrationDataSource(){
         return FirebaseRegistrationDataSource.getInstance();
+    }
+
+    public static FirebaseAddFriendsRepository provideFirebaseAddFriendsRepository(){
+        return FirebaseAddFriendsRepository.getInstance();
     }
 
     public static FirebaseFriendsRepository provideFirebaseFriendsRepository(){

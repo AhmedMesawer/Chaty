@@ -70,11 +70,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
         @BindView(R.id.friend_profile_image_view)
         ImageView friendProfileImageView;
 
-        public FriendsViewHolder(View itemView) {
+        FriendsViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
     }
-
-    //TODO convert item click listener for each recycler view to rx
 }

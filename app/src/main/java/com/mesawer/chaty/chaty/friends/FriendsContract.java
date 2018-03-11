@@ -13,6 +13,9 @@ public interface FriendsContract {
         void showFriends(User friend);
 
         void navigateToChatActivity(User friend);
+
+        void navigateToAddFriendActivity();
+
     }
 
     interface Presenter{

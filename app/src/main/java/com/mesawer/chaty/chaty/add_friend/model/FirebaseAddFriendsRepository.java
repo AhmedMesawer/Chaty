@@ -1,11 +1,10 @@
-package com.mesawer.chaty.chaty.friends.model;
+package com.mesawer.chaty.chaty.add_friend.model;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.mesawer.chaty.chaty.base.FailedResponseCallback;
 import com.mesawer.chaty.chaty.base.SuccessfulResponseWithResultCallback;
 import com.mesawer.chaty.chaty.data.User;
@@ -15,26 +14,26 @@ import com.mesawer.chaty.chaty.utils.Injection;
  * Created by ilias on 08/03/2018.
  */
 
-public class FirebaseFriendsRepository implements FriendsDataSource {
+public class FirebaseAddFriendsRepository implements AddFriendsDataSource {
 
-    private static FirebaseFriendsRepository INSTANCE;
+    private static FirebaseAddFriendsRepository INSTANCE;
     private FirebaseAuth auth;
     private DatabaseReference database;
 
-    private FirebaseFriendsRepository() {
+    private FirebaseAddFriendsRepository() {
         auth = Injection.provideFirebaseAuth();
         database = Injection.provideFirebaseDatabaseReference().child("users");
     }
 
-    public static FirebaseFriendsRepository getInstance() {
-        if (INSTANCE == null) INSTANCE = new FirebaseFriendsRepository();
+    public static FirebaseAddFriendsRepository getInstance() {
+        if (INSTANCE == null) INSTANCE = new FirebaseAddFriendsRepository();
         return INSTANCE;
     }
 
     @Override
-    public void getFriends(User user,
-                           SuccessfulResponseWithResultCallback<User> resultCallback,
-                           FailedResponseCallback failedCallback) {
+    public void getUsers(User user,
+                         SuccessfulResponseWithResultCallback<User> resultCallback,
+                         FailedResponseCallback failedCallback) {
         database.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -82,5 +81,10 @@ public class FirebaseFriendsRepository implements FriendsDataSource {
 //                failedCallback.onError(databaseError.getMessage());
 //            }
 //        });
+    }
+
+    @Override
+    public void sendFriendRequest(User current, User userToSend, SuccessfulResponseWithResultCallback<User> resultCallback, FailedResponseCallback failedCallback) {
+
     }
 }

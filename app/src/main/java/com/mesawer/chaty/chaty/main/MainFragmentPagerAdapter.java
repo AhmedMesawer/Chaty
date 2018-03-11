@@ -119,4 +119,5 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
             }
         });
     }
+
 }

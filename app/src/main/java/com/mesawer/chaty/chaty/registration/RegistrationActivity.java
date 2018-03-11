@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.mesawer.chaty.chaty.main.MainActivity.USER_INTENT_KEY;
+import static com.mesawer.chaty.chaty.main.MainActivity.CURRENT_USER_INTENT_KEY;
 import static com.mesawer.chaty.chaty.utils.StringUtil.isNullOrEmpty;
 import static com.mesawer.chaty.chaty.utils.StringUtil.isValidEmailAddress;
 import static com.mesawer.chaty.chaty.utils.StringUtil.notNullOrEmpty;
@@ -50,7 +50,7 @@ public class RegistrationActivity extends BaseActivity implements RegistrationCo
     @Override
     public void navigateToMainActivity(User user) {
         Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-        intent.putExtra(USER_INTENT_KEY, user);
+        intent.putExtra(CURRENT_USER_INTENT_KEY, user);
         startActivity(intent);
         finish();
     }

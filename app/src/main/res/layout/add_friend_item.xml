@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    style="@style/layoutMargins">
+
+    <ImageView
+        android:id="@+id/add_friend_profile_image_view"
+        android:layout_width="0dp"
+        android:layout_height="62dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.75"
+        android:paddingBottom="2dp"
+        android:paddingEnd="2dp"
+        android:paddingStart="2dp"
+        android:paddingTop="2dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_profile" />
+
+    <TextView
+        android:id="@+id/add_friend_name_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:layout_gravity="center_vertical"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="18sp"
+        tools:text="Ahmed Mesawer" />
+
+    <Button
+        android:id="@+id/add_friend_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="2.5"
+        android:text="@string/add_friend"
+        style="@style/buttonStyle"
+
+        android:textAlignment="center"/>
+</LinearLayout>

@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.mesawer.chaty.chaty.R;
@@ -15,7 +16,8 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String USER_INTENT_KEY = "user";
+    public static final String CURRENT_USER_INTENT_KEY = "currentUser";
+    public static final String SHARED_PREFERENCES_FILE_KEY = "ChatySharedPreferencesFile";
     @BindView(R.id.main_tab_Layout)
     TabLayout mainTabLayout;
     @BindView(R.id.main_view_pager)
@@ -32,10 +34,15 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initPagerAdapter();
         if (getIntent() != null) {
-            user = getIntent().getParcelableExtra(USER_INTENT_KEY);
+            user = getIntent().getParcelableExtra(CURRENT_USER_INTENT_KEY);
             if (user != null)
-            Snackbar.make(mainLayout, user.getEmail(), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mainLayout, user.getEmail(), Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     private void initPagerAdapter() {

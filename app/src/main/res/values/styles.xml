@@ -15,7 +15,8 @@
     </style>
 
     <style name="buttonStyle">
-        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:textColor">@color/secondaryColor</item>
+        <item name="android:textAllCaps">false</item>
         <item name="android:backgroundTint">@color/primaryLightColor</item>
     </style>
 

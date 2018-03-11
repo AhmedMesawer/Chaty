@@ -6,6 +6,7 @@ import android.support.constraint.ConstraintLayout;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.mesawer.chaty.chaty.BuildConfig;
 import com.mesawer.chaty.chaty.R;
 import com.mesawer.chaty.chaty.base.BaseActivity;
 import com.mesawer.chaty.chaty.data.User;
@@ -16,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.mesawer.chaty.chaty.main.MainActivity.USER_INTENT_KEY;
+import static com.mesawer.chaty.chaty.main.MainActivity.CURRENT_USER_INTENT_KEY;
 import static com.mesawer.chaty.chaty.utils.StringUtil.notNullOrEmpty;
 
 public class LoginActivity extends BaseActivity implements LoginContract.View {
@@ -39,12 +40,16 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         super.view = loginLayout;
         loginPresenter = new LoginPresenter(this,
                 Injection.provideFirebaseLoginDataSource());
+        if (BuildConfig.DEBUG){
+            etEmailLogin.setText("hamasa@gmail.com");
+            etPassword.setText("123456");
+        }
     }
 
     @Override
     public void navigateToMainActivity(User user) {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra(USER_INTENT_KEY, user);
+        intent.putExtra(CURRENT_USER_INTENT_KEY, user);
         startActivity(intent);
         finish();
     }
