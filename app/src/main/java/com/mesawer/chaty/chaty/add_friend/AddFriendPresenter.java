@@ -35,7 +35,14 @@ public class AddFriendPresenter implements AddFriendContract.Presenter {
     @Override
     public void sendFriendRequest(User current, User userToSend) {
         addFriendsDataSource.sendFriendRequest(current, userToSend,
-                result -> addFriendView.showButtonAsFriendRequestSent(result),
+                result -> addFriendView.changeAddFriendButtonText(result),
+                errMsg -> addFriendView.showErrorMessage(errMsg));
+    }
+
+    @Override
+    public void cancelFriendRequest(User current, User userToCancel) {
+        addFriendsDataSource.cancelFriendRequest(current, userToCancel,
+                result -> addFriendView.changeAddFriendButtonText(result),
                 errMsg -> addFriendView.showErrorMessage(errMsg));
     }
 }

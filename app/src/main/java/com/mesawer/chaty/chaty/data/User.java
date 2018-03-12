@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by ilias on 05/03/2018.
@@ -19,11 +18,11 @@ public class User implements Parcelable {
     private String password;
     private List<String> friends;
     private List<String> chats;
-    private List<String> friendRequests;
+    private List<String> outgoingRequests;
+    private List<String> incomingRequests;
 
     public User() {
     }
-
 
     public User(String userName, String email, String password) {
         this.userName = userName;
@@ -31,7 +30,8 @@ public class User implements Parcelable {
         this.password = password;
         friends = new ArrayList<>();
         chats = new ArrayList<>();
-        friendRequests = new ArrayList<>();
+        outgoingRequests = new ArrayList<>();
+        incomingRequests = new ArrayList<>();
     }
 
     //region Setters and Getters
@@ -65,15 +65,25 @@ public class User implements Parcelable {
 
     public void addFriendRequest(String friendRequest) {
 
-        if (friendRequests != null) friendRequests.add(friendRequest);
+        if (outgoingRequests != null) outgoingRequests.add(friendRequest);
         else {
-            friendRequests = new ArrayList<>();
-            friendRequests.add(friendRequest);
+            outgoingRequests = new ArrayList<>();
+            outgoingRequests.add(friendRequest);
         }
     }
 
-    public List<String> getFriendRequests() {
-        return friendRequests;
+    public List<String> getIncomingRequests() {
+        return incomingRequests;
+    }
+
+    public void removeFriendRequest(String friendRequest) {
+
+        if (outgoingRequests != null && outgoingRequests.contains(friendRequest))
+            outgoingRequests.remove(friendRequest);
+    }
+
+    public List<String> getOutgoingRequests() {
+        return outgoingRequests;
     }
 
     public void setChats(List<String> chats) {
@@ -99,7 +109,8 @@ public class User implements Parcelable {
         dest.writeString(this.password);
         dest.writeStringList(this.friends);
         dest.writeStringList(this.chats);
-        dest.writeStringList(this.friendRequests);
+        dest.writeStringList(this.outgoingRequests);
+        dest.writeStringList(this.incomingRequests);
     }
 
     protected User(Parcel in) {
@@ -109,7 +120,8 @@ public class User implements Parcelable {
         this.password = in.readString();
         this.friends = in.createStringArrayList();
         this.chats = in.createStringArrayList();
-        this.friendRequests = in.createStringArrayList();
+        this.outgoingRequests = in.createStringArrayList();
+        this.incomingRequests = in.createStringArrayList();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {

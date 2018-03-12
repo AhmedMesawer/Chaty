@@ -42,24 +42,16 @@ public class FirebaseFriendRequestsRepository implements FriendRequestsDataSourc
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
 //        database.addValueEventListener(new ValueEventListener() {
 //            @Override
@@ -88,8 +80,8 @@ public class FirebaseFriendRequestsRepository implements FriendRequestsDataSourc
                                   SuccessfulResponseWithResultCallback<User> resultCallback,
                                   FailedResponseCallback failedCallback) {
         current.addFriendRequest(userToSend.getUserId());
-        int index = current.getFriendRequests() != null ?
-                current.getFriendRequests().size() : 0;
+        int index = current.getOutgoingRequests() != null ?
+                current.getOutgoingRequests().size() : 0;
         database.child(current.getUserId()).child("friendRequests")
                 .child(String.valueOf(index))
                 .setValue(userToSend.getUserId() )

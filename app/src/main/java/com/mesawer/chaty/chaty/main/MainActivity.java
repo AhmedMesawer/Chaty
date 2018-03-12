@@ -1,8 +1,10 @@
 package com.mesawer.chaty.chaty.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,6 +15,8 @@ import com.mesawer.chaty.chaty.data.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.mesawer.chaty.chaty.add_friend.AddFriendActivity.ADD_FRIEND_REQUEST_CODE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +47,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment friends = getSupportFragmentManager()
+                .findFragmentByTag("android:switcher:" + R.id.main_view_pager + ":" +
+                        mainViewPager.getCurrentItem());
+        if (friends != null) {
+            friends.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void initPagerAdapter() {

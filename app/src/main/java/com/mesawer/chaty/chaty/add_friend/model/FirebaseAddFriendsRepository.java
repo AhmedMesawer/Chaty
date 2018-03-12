@@ -42,24 +42,16 @@ public class FirebaseAddFriendsRepository implements AddFriendsDataSource {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
 //        database.addValueEventListener(new ValueEventListener() {
 //            @Override
@@ -88,11 +80,27 @@ public class FirebaseAddFriendsRepository implements AddFriendsDataSource {
                                   SuccessfulResponseWithResultCallback<User> resultCallback,
                                   FailedResponseCallback failedCallback) {
         current.addFriendRequest(userToSend.getUserId());
-        int index = current.getFriendRequests() != null ?
-                current.getFriendRequests().size() : 0;
-        database.child(current.getUserId()).child("friendRequests")
+        int index = current.getOutgoingRequests() != null ?
+                current.getOutgoingRequests().size() : 0;
+        database.child(current.getUserId()).child("outgoingRequests")
                 .child(String.valueOf(index))
                 .setValue(userToSend.getUserId() )
+                .addOnCompleteListener(
+                        task -> {
+                            if (task.isSuccessful()) {
+                                resultCallback.onSuccess(userToSend);
+                            }
+                        })
+                .addOnFailureListener(e -> failedCallback.onError(e.getMessage()));
+    }
+
+    @Override
+    public void cancelFriendRequest(User current, User userToSend,
+                                    SuccessfulResponseWithResultCallback<User> resultCallback,
+                                    FailedResponseCallback failedCallback) {
+        current.removeFriendRequest(userToSend.getUserId());
+        database.child(current.getUserId()).child("friendRequests")
+                .setValue(current.getOutgoingRequests())
                 .addOnCompleteListener(
                         task -> {
                             if (task.isSuccessful()) {

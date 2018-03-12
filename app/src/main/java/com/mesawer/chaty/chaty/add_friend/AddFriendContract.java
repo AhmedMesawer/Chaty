@@ -12,12 +12,14 @@ public interface AddFriendContract {
     interface View extends IView {
         void showUsers(User user);
 
-        void showButtonAsFriendRequestSent(User user);
+        void changeAddFriendButtonText(User user);
     }
 
     interface Presenter {
         void getUsers(User current);
 
         void sendFriendRequest(User current, User userToSend);
+
+        void cancelFriendRequest(User current, User userToCancel);
     }
 }

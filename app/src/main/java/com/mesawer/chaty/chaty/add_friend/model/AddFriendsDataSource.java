@@ -17,4 +17,8 @@ public interface AddFriendsDataSource {
     void sendFriendRequest(User current, User userToSend,
                   SuccessfulResponseWithResultCallback<User> resultCallback,
                   FailedResponseCallback failedCallback);
+
+    void cancelFriendRequest(User current, User userToSend,
+                  SuccessfulResponseWithResultCallback<User> resultCallback,
+                  FailedResponseCallback failedCallback);
 }

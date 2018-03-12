@@ -30,6 +30,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static android.app.Activity.RESULT_OK;
+import static com.mesawer.chaty.chaty.add_friend.AddFriendActivity.ADD_FRIEND_REQUEST_CODE;
 import static com.mesawer.chaty.chaty.main.MainActivity.CURRENT_USER_INTENT_KEY;
 import static com.mesawer.chaty.chaty.main.MainActivity.SHARED_PREFERENCES_FILE_KEY;
 
@@ -83,6 +85,14 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_FRIEND_REQUEST_CODE && resultCode == RESULT_OK){
+            user = data.getParcelableExtra(CURRENT_USER_INTENT_KEY);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
@@ -102,7 +112,7 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
     public void navigateToAddFriendActivity() {
         Intent intent = new Intent(getActivity(), AddFriendActivity.class);
         intent.putExtra(CURRENT_USER_INTENT_KEY, user);
-        startActivity(intent);
+        getActivity().startActivityForResult(intent, ADD_FRIEND_REQUEST_CODE);
     }
 
     private void setupFriendsRecyclerView() {
