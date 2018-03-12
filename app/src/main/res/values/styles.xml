@@ -20,6 +20,17 @@
         <item name="android:backgroundTint">@color/primaryLightColor</item>
     </style>
 
+    <style name="unColoredButtonStyle">
+        <item name="android:textColor">@color/secondaryColor</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="textViewStyle">
+        <item name="android:paddingEnd">4dp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+    </style>
+
     <style name="layoutMargins">
         <item name="android:layout_marginBottom">4dp</item>
         <item name="android:layout_marginTop">4dp</item>

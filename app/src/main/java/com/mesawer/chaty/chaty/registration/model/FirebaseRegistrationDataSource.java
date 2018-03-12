@@ -41,7 +41,9 @@ public class FirebaseRegistrationDataSource implements RegistrationDataSource {
         auth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        database.child(auth.getCurrentUser().getUid()).setValue(user);
+                        String userId = auth.getCurrentUser().getUid();
+                        user.setUserId(userId);
+                        database.child(userId).setValue(user);
                         resultCallback.onSuccess(user);
                     }
                 })

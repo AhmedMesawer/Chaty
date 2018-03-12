@@ -38,8 +38,18 @@ public class FirebaseFriendsRepository implements FriendsDataSource {
         database.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User friend =dataSnapshot.getValue(User.class);
-                resultCallback.onSuccess(friend);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (user.getFriends() != null && !user.getFriends().isEmpty()) {
+                        for (String key : user.getFriends()) {
+                            if (key.equals(snapshot.getKey())){
+                                User friend = snapshot.getValue(User.class);
+                                resultCallback.onSuccess(friend);
+                            }
+                        }
+                    } else {
+                       failedCallback.onError("no friends");
+                    }
+                }
             }
 
             @Override

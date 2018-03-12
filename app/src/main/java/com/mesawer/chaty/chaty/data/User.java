@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class User implements Parcelable {
 
-//    private String userId;
+    private String userId;
     private String userName;
     private String email;
     private String password;
@@ -21,24 +21,27 @@ public class User implements Parcelable {
     private List<String> chats;
     private List<String> friendRequests;
 
-    public User() {}
+    public User() {
+    }
 
 
     public User(String userName, String email, String password) {
-//        this.userId = UUID.randomUUID().toString();
         this.userName = userName;
         this.email = email;
         this.password = password;
         friends = new ArrayList<>();
         chats = new ArrayList<>();
         friendRequests = new ArrayList<>();
-
     }
 
     //region Setters and Getters
-//    public String getUserId() {
-//        return userId;
-//    }
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getUserName() {
         return userName;
@@ -60,10 +63,19 @@ public class User implements Parcelable {
         this.friends = friends;
     }
 
+    public void addFriendRequest(String friendRequest) {
+
+        if (friendRequests != null) friendRequests.add(friendRequest);
+        else {
+            friendRequests = new ArrayList<>();
+            friendRequests.add(friendRequest);
+        }
+    }
 
     public List<String> getFriendRequests() {
         return friendRequests;
     }
+
     public void setChats(List<String> chats) {
         this.chats = chats;
     }
@@ -81,24 +93,26 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeString(this.userId);
+        dest.writeString(this.userId);
         dest.writeString(this.userName);
         dest.writeString(this.email);
         dest.writeString(this.password);
         dest.writeStringList(this.friends);
         dest.writeStringList(this.chats);
+        dest.writeStringList(this.friendRequests);
     }
 
     protected User(Parcel in) {
-//        this.userId = in.readString();
+        this.userId = in.readString();
         this.userName = in.readString();
         this.email = in.readString();
         this.password = in.readString();
         this.friends = in.createStringArrayList();
         this.chats = in.createStringArrayList();
+        this.friendRequests = in.createStringArrayList();
     }
 
-    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+    public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel source) {
             return new User(source);

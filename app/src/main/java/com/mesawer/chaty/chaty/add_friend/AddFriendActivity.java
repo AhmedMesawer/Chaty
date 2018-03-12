@@ -31,6 +31,7 @@ public class AddFriendActivity extends BaseActivity implements AddFriendContract
     AddFriendContract.Presenter addFriendPresenter;
     User currentUser;
     PublishSubject<User> addFriendButtonObserver = PublishSubject.create();
+    PublishSubject<User> friendRequestObservable = PublishSubject.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +44,14 @@ public class AddFriendActivity extends BaseActivity implements AddFriendContract
         if (getActionBar() != null) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        setupUsersRecyclerView();
+        currentUser = getIntent().getParcelableExtra(CURRENT_USER_INTENT_KEY);
+        if (currentUser != null)
+            setupUsersRecyclerView();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        currentUser = getIntent().getParcelableExtra(CURRENT_USER_INTENT_KEY);
         if (currentUser != null)
             addFriendPresenter.getUsers(currentUser);
         addFriendButtonObserver.subscribe(
@@ -73,13 +75,15 @@ public class AddFriendActivity extends BaseActivity implements AddFriendContract
     }
 
     @Override
-    public void showButtonAsFriendRequestSent() {
-
+    public void showButtonAsFriendRequestSent(User user) {
+        friendRequestObservable.onNext(user);
     }
 
     private void setupUsersRecyclerView() {
         llm = new LinearLayoutManager(this);
-        addFriendsAdapter = new AddFriendsAdapter(new ArrayList<>(), addFriendButtonObserver);
+        addFriendsAdapter =
+                new AddFriendsAdapter(new ArrayList<>(), currentUser,
+                        addFriendButtonObserver, friendRequestObservable);
         addFriendRv.setLayoutManager(llm);
         addFriendRv.setAdapter(addFriendsAdapter);
     }

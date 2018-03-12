@@ -1,4 +1,4 @@
-package com.mesawer.chaty.chaty.add_friend.model;
+package com.mesawer.chaty.chaty.friendship_requests.model;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -14,26 +14,26 @@ import com.mesawer.chaty.chaty.utils.Injection;
  * Created by ilias on 08/03/2018.
  */
 
-public class FirebaseAddFriendsRepository implements AddFriendsDataSource {
+public class FirebaseFriendRequestsRepository implements FriendRequestsDataSource {
 
-    private static FirebaseAddFriendsRepository INSTANCE;
+    private static FirebaseFriendRequestsRepository INSTANCE;
     private FirebaseAuth auth;
     private DatabaseReference database;
 
-    private FirebaseAddFriendsRepository() {
+    private FirebaseFriendRequestsRepository() {
         auth = Injection.provideFirebaseAuth();
         database = Injection.provideFirebaseDatabaseReference().child("users");
     }
 
-    public static FirebaseAddFriendsRepository getInstance() {
-        if (INSTANCE == null) INSTANCE = new FirebaseAddFriendsRepository();
+    public static FirebaseFriendRequestsRepository getInstance() {
+        if (INSTANCE == null) INSTANCE = new FirebaseFriendRequestsRepository();
         return INSTANCE;
     }
 
     @Override
-    public void getUsers(User user,
-                         SuccessfulResponseWithResultCallback<User> resultCallback,
-                         FailedResponseCallback failedCallback) {
+    public void getFriendRequests(User user,
+                                  SuccessfulResponseWithResultCallback<User> resultCallback,
+                                  FailedResponseCallback failedCallback) {
         database.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

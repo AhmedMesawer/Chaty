@@ -12,7 +12,7 @@ public interface AddFriendContract {
     interface View extends IView {
         void showUsers(User user);
 
-        void showButtonAsFriendRequestSent();
+        void showButtonAsFriendRequestSent(User user);
     }
 
     interface Presenter {

@@ -24,11 +24,17 @@ import io.reactivex.subjects.PublishSubject;
 public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.AddFriendsViewHolder> {
 
     private List<User> friends;
+    private User current;
     private PublishSubject<User> addFriendClickedObservable;
+    private PublishSubject<User> friendRequestObserver;
 
-    public AddFriendsAdapter(List<User> friends, PublishSubject<User> addFriendClickedObservable) {
+    public AddFriendsAdapter(List<User> friends, User current,
+                             PublishSubject<User> addFriendClickedObservable,
+                             PublishSubject<User> friendRequestObserver) {
         this.friends = friends;
+        this.current = current;
         this.addFriendClickedObservable = addFriendClickedObservable;
+        this.friendRequestObserver = friendRequestObserver;
     }
 
 //    public AddFriendsAdapter(List<User> friends) {
@@ -47,7 +53,17 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Ad
         User user = friends.get(position);
 //        holder.addFriendProfileImageView.setImageResource();
         holder.addFriendTextView.setText(user.getUserName());
-        holder.addFriendButton.setOnClickListener(view ->  addFriendClickedObservable.onNext(user));
+        if (current.getFriendRequests() != null) {
+            if (current.getFriendRequests().contains(user.getUserId())) {
+                holder.addFriendButton.setText(R.string.cancel_request);
+            }
+        }
+        friendRequestObserver.subscribe(user1 -> {
+            if (user1.getEmail().equals(user.getEmail())) {
+                holder.addFriendButton.setText(R.string.cancel_request);
+            }
+        });
+        holder.addFriendButton.setOnClickListener(view -> addFriendClickedObservable.onNext(user));
     }
 
     @Override
@@ -55,12 +71,12 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Ad
         return friends.size();
     }
 
-    public void setFriends(List<User> friends){
+    public void setFriends(List<User> friends) {
         this.friends = friends;
         notifyDataSetChanged();
     }
 
-    public void add(User friend){
+    public void add(User friend) {
         this.friends.add(friend);
         notifyDataSetChanged();
     }

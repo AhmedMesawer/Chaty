@@ -41,7 +41,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         loginPresenter = new LoginPresenter(this,
                 Injection.provideFirebaseLoginDataSource());
         if (BuildConfig.DEBUG){
-            etEmailLogin.setText("hamasa@gmail.com");
+            etEmailLogin.setText("a@b.co");
             etPassword.setText("123456");
         }
     }

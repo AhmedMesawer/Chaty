@@ -2,13 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/friend_requests_layout"
+    style="@style/layoutMargins"
     tools:context="com.mesawer.chaty.chaty.friendship_requests.FriendshipRequestsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="25dp"
-        android:text="3" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/friend_requests_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>
