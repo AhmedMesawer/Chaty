@@ -68,7 +68,6 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
         super.view = friendsFragmentLayout;
         friendPresenter = new FriendsPresenter(this,
                 Injection.provideFirebaseFriendsRepository());
-        setupFriendsRecyclerView();
         return view;
     }
 
@@ -78,10 +77,9 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
         Intent intent = getActivity().getIntent();
         if (intent != null) {
             user = intent.getParcelableExtra(CURRENT_USER_INTENT_KEY);
-            if (user != null) {
-                friendPresenter.getFriends(user);
-            }
-       }
+
+        }
+        setupFriendsRecyclerView();
     }
 
     @Override
@@ -93,14 +91,22 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (user != null) {
+            friendPresenter.getFriends(user);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
 
     @Override
-    public void showFriends(User friend) {
-        friendsAdapter.add(friend);
+    public void showFriends(List<User> friends) {
+        friendsAdapter.setFriends(friends);
     }
 
     @Override

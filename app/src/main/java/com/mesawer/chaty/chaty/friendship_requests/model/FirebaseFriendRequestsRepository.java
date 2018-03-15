@@ -5,10 +5,15 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.mesawer.chaty.chaty.base.FailedResponseCallback;
-import com.mesawer.chaty.chaty.base.SuccessfulResponseWithResultCallback;
+import com.google.firebase.database.ValueEventListener;
 import com.mesawer.chaty.chaty.data.User;
 import com.mesawer.chaty.chaty.utils.Injection;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import io.reactivex.Maybe;
 
 /**
  * Created by ilias on 08/03/2018.
@@ -31,66 +36,97 @@ public class FirebaseFriendRequestsRepository implements FriendRequestsDataSourc
     }
 
     @Override
-    public void getFriendRequests(User user,
-                                  SuccessfulResponseWithResultCallback<User> resultCallback,
-                                  FailedResponseCallback failedCallback) {
-        database.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User friend = dataSnapshot.getValue(User.class);
-                resultCallback.onSuccess(friend);
-            }
+    public Maybe<List<User>> getFriendRequests(User user) {
+        return Maybe.create(emitter -> {
+            List<User> friendRequests = new ArrayList<>();
+            database.child(user.getUserId()).child("incomingRequests")
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot incomingSnapshot, String s) {
+                            friendRequests.clear();
+                            database.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot usersSnapshot) {
+                                    for (DataSnapshot snapshot : usersSnapshot.getChildren()) {
+                                        if (snapshot.getKey().equals(incomingSnapshot.getKey())){
+                                            friendRequests.add(snapshot.getValue(User.class));
+                                        }
+                                    }
+                                    emitter.onSuccess(friendRequests);
+                                }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    emitter.onError(databaseError.toException());
+                                }
+                            });
+                        }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {}
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            emitter.onError(databaseError.toException());
+                        }
+                    });
         });
-//        database.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                User friend =dataSnapshot.getValue(User.class);
-//                resultCallback.onSuccess(friend);
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    for (String key : user.getUsers()) {
-//                        if (key.equals(snapshot.getKey())){
-//                            User friend = snapshot.getValue(User.class);
-//                            resultCallback.onSuccess(friend);
-//                        }
-//                    }
-//                }
-//            }
-
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                failedCallback.onError(databaseError.getMessage());
-//            }
-//        });
     }
 
     @Override
-    public void sendFriendRequest(User current, User userToSend,
-                                  SuccessfulResponseWithResultCallback<User> resultCallback,
-                                  FailedResponseCallback failedCallback) {
-        current.addFriendRequest(userToSend.getUserId());
-        int index = current.getOutgoingRequests() != null ?
-                current.getOutgoingRequests().size() : 0;
-        database.child(current.getUserId()).child("friendRequests")
-                .child(String.valueOf(index))
-                .setValue(userToSend.getUserId() )
+    public Maybe<User> acceptFriendRequest(User current, User userToAccept) {
+//        current.addOutgoingRequest(userToAccept.getUserId());
+        return Maybe.create(
+                emitter -> database.child(current.getUserId()).child("friends")
+                .child(userToAccept.getUserId())
+                .setValue(new Date().toString())
                 .addOnCompleteListener(
                         task -> {
                             if (task.isSuccessful()) {
-                                resultCallback.onSuccess(userToSend);
+                                //region add current as a friend
+                                database.child(userToAccept.getUserId()).child("friends")
+                                        .child(current.getUserId())
+                                        .setValue(new Date().toString())
+                                        .addOnCompleteListener(
+                                                t -> {
+                                                    if (t.isSuccessful()) {
+                                                        database.child(current.getUserId())
+                                                                .child("incomingRequests")
+                                                                .child(userToAccept.getUserId())
+                                                                .removeValue();
+
+                                                        database.child(userToAccept.getUserId())
+                                                                .child("outgoingRequests")
+                                                                .child(current.getUserId())
+                                                                .removeValue();
+                                                        emitter.onSuccess(userToAccept);
+                                                    }
+                                                });
+                                //endregion
                             }
                         })
-                .addOnFailureListener(e -> failedCallback.onError(e.getMessage()));
+                .addOnFailureListener(emitter::onError));
+    }
+
+    @Override
+    public Maybe<User> ignoreFriendRequest(User current, User userToIgnore) {
+        return Maybe.create(emitter -> {
+            database.child(current.getUserId()).child("incomingRequests")
+                    .child(userToIgnore.getUserId())
+                    .removeValue();
+
+            database.child(userToIgnore.getUserId()).child("outgoingRequests")
+                    .child(current.getUserId())
+                    .removeValue((databaseError, databaseReference) -> {
+                        emitter.onSuccess(userToIgnore);
+                        emitter.onError(databaseError.toException());
+                    });
+        });
     }
 }

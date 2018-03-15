@@ -4,7 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ilias on 05/03/2018.
@@ -16,10 +19,10 @@ public class User implements Parcelable {
     private String userName;
     private String email;
     private String password;
-    private List<String> friends;
-    private List<String> chats;
-    private List<String> outgoingRequests;
-    private List<String> incomingRequests;
+    private Map<String, String> friends = new HashMap<>();
+    private Map<String, String> chats = new HashMap<>();
+    private Map<String, String> outgoingRequests = new HashMap<>();
+    private Map<String, String> incomingRequests = new HashMap<>();
 
     public User() {
     }
@@ -28,10 +31,10 @@ public class User implements Parcelable {
         this.userName = userName;
         this.email = email;
         this.password = password;
-        friends = new ArrayList<>();
-        chats = new ArrayList<>();
-        outgoingRequests = new ArrayList<>();
-        incomingRequests = new ArrayList<>();
+//        friends = new HashMap<>();
+//        chats = new HashMap<>();
+//        outgoingRequests = new HashMap<>();
+//        incomingRequests = new HashMap<>();
     }
 
     //region Setters and Getters
@@ -55,47 +58,56 @@ public class User implements Parcelable {
         return password;
     }
 
-    public List<String> getFriends() {
+    public Map<String, String> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<String> friends) {
-        this.friends = friends;
+    public Map<String, String> getChats() {
+        return chats;
     }
 
-    public void addFriendRequest(String friendRequest) {
-
-        if (outgoingRequests != null) outgoingRequests.add(friendRequest);
-        else {
-            outgoingRequests = new ArrayList<>();
-            outgoingRequests.add(friendRequest);
-        }
-    }
-
-    public List<String> getIncomingRequests() {
-        return incomingRequests;
-    }
-
-    public void removeFriendRequest(String friendRequest) {
-
-        if (outgoingRequests != null && outgoingRequests.contains(friendRequest))
-            outgoingRequests.remove(friendRequest);
-    }
-
-    public List<String> getOutgoingRequests() {
+    public Map<String, String> getOutgoingRequests() {
         return outgoingRequests;
     }
 
-    public void setChats(List<String> chats) {
-        this.chats = chats;
+    public Map<String, String> getIncomingRequests() {
+        return incomingRequests;
     }
 
-    public List<String> getChats() {
-        return chats;
+    public void addOutgoingRequest(String friendRequest) {
+
+        if (outgoingRequests != null) outgoingRequests.put(friendRequest, new Date().toString());
+        else {
+            outgoingRequests = new HashMap<>();
+            outgoingRequests.put(friendRequest, new Date().toString());
+        }
     }
+
+    public void addIncomingRequest(String friendRequest) {
+
+        if (incomingRequests != null) incomingRequests.put(friendRequest, new Date().toString());
+        else {
+            incomingRequests = new HashMap<>();
+            incomingRequests.put(friendRequest, new Date().toString());
+        }
+    }
+
+    public void removeOutgoingRequest(String friendRequest) {
+
+        if (outgoingRequests != null && outgoingRequests.containsKey(friendRequest))
+            outgoingRequests.remove(friendRequest);
+    }
+
+    public void removeIncomingRequest(String friendRequest) {
+
+        if (incomingRequests != null && incomingRequests.containsKey(friendRequest))
+            incomingRequests.remove(friendRequest);
+    }
+
     //endregion
 
     //region Parcelable
+
     @Override
     public int describeContents() {
         return 0;
@@ -107,10 +119,26 @@ public class User implements Parcelable {
         dest.writeString(this.userName);
         dest.writeString(this.email);
         dest.writeString(this.password);
-        dest.writeStringList(this.friends);
-        dest.writeStringList(this.chats);
-        dest.writeStringList(this.outgoingRequests);
-        dest.writeStringList(this.incomingRequests);
+        dest.writeInt(this.friends.size());
+        for (Map.Entry<String, String> entry : this.friends.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeString(entry.getValue());
+        }
+        dest.writeInt(this.chats.size());
+        for (Map.Entry<String, String> entry : this.chats.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeString(entry.getValue());
+        }
+        dest.writeInt(this.outgoingRequests.size());
+        for (Map.Entry<String, String> entry : this.outgoingRequests.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeString(entry.getValue());
+        }
+        dest.writeInt(this.incomingRequests.size());
+        for (Map.Entry<String, String> entry : this.incomingRequests.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeString(entry.getValue());
+        }
     }
 
     protected User(Parcel in) {
@@ -118,10 +146,34 @@ public class User implements Parcelable {
         this.userName = in.readString();
         this.email = in.readString();
         this.password = in.readString();
-        this.friends = in.createStringArrayList();
-        this.chats = in.createStringArrayList();
-        this.outgoingRequests = in.createStringArrayList();
-        this.incomingRequests = in.createStringArrayList();
+        int friendsSize = in.readInt();
+        this.friends = new HashMap<String, String>(friendsSize);
+        for (int i = 0; i < friendsSize; i++) {
+            String key = in.readString();
+            String value = in.readString();
+            this.friends.put(key, value);
+        }
+        int chatsSize = in.readInt();
+        this.chats = new HashMap<String, String>(chatsSize);
+        for (int i = 0; i < chatsSize; i++) {
+            String key = in.readString();
+            String value = in.readString();
+            this.chats.put(key, value);
+        }
+        int outgoingRequestsSize = in.readInt();
+        this.outgoingRequests = new HashMap<String, String>(outgoingRequestsSize);
+        for (int i = 0; i < outgoingRequestsSize; i++) {
+            String key = in.readString();
+            String value = in.readString();
+            this.outgoingRequests.put(key, value);
+        }
+        int incomingRequestsSize = in.readInt();
+        this.incomingRequests = new HashMap<String, String>(incomingRequestsSize);
+        for (int i = 0; i < incomingRequestsSize; i++) {
+            String key = in.readString();
+            String value = in.readString();
+            this.incomingRequests.put(key, value);
+        }
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -136,4 +188,5 @@ public class User implements Parcelable {
         }
     };
     //endregion
+
 }

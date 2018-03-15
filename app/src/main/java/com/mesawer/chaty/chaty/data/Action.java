@@ -1,4 +1,4 @@
-package com.mesawer.chaty.chaty.add_friend;
+package com.mesawer.chaty.chaty.data;
 
 import com.mesawer.chaty.chaty.data.User;
 

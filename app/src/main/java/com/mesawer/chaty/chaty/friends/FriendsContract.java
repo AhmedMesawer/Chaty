@@ -3,6 +3,8 @@ package com.mesawer.chaty.chaty.friends;
 import com.mesawer.chaty.chaty.base.IView;
 import com.mesawer.chaty.chaty.data.User;
 
+import java.util.List;
+
 /**
  * Created by ilias on 08/03/2018.
  */
@@ -10,7 +12,7 @@ import com.mesawer.chaty.chaty.data.User;
 public interface FriendsContract {
 
     interface View extends IView{
-        void showFriends(User friend);
+        void showFriends(List<User> friend);
 
         void navigateToChatActivity(User friend);
 

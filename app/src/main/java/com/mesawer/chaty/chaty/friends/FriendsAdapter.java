@@ -53,13 +53,23 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
         return friends.size();
     }
 
-    public void setFriends(List<User> friends){
+    public void setFriends(List<User> friends) {
         this.friends = friends;
         notifyDataSetChanged();
     }
 
-    public void add(User friend){
-        this.friends.add(friend);
+    public void add(User friend) {
+        if (friends.isEmpty())
+            friends.add(friend);
+        else {
+            for (User f : friends) {
+                if (f.getUserId().equals(friend.getUserId())) {
+                    friends.remove(friend);
+                    friends.add(friend);
+                    notifyDataSetChanged();
+                } else friends.add(friend);
+            }
+        }
         notifyDataSetChanged();
     }
 

@@ -19,15 +19,16 @@ public class FriendsPresenter implements FriendsContract.Presenter {
 
     @Override
     public void getFriends(User user) {
-        friendsView.showLoadingIndicator();
-        friendsDataSource.getFriends(user,
-                result -> {
-                    friendsView.hideLoadingIndicator();
-                    friendsView.showFriends(result);
-                },
-                errMsg -> {
-                    friendsView.hideLoadingIndicator();
-                    friendsView.showErrorMessage(errMsg);
-                });
+        if (!user.getFriends().isEmpty())
+            friendsView.showLoadingIndicator();
+        friendsDataSource.getFriends(user)
+                .subscribe(friends -> {
+                            friendsView.hideLoadingIndicator();
+                            friendsView.showFriends(friends);
+                        },
+                        throwable -> {
+                            friendsView.hideLoadingIndicator();
+                            friendsView.showErrorMessage(throwable.getMessage());
+                        });
     }
 }

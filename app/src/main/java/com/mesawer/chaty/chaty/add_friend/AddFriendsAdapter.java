@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mesawer.chaty.chaty.R;
+import com.mesawer.chaty.chaty.data.Action;
 import com.mesawer.chaty.chaty.data.User;
 
 import java.util.List;
@@ -37,10 +38,6 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Ad
         this.friendRequestObserver = friendRequestObserver;
     }
 
-//    public AddFriendsAdapter(List<User> friends) {
-//        this.friends = friends;
-//    }
-
     @Override
     public AddFriendsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -54,7 +51,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Ad
 //        holder.addFriendProfileImageView.setImageResource();
         holder.addFriendTextView.setText(user.getUserName());
         if (current.getOutgoingRequests() != null) {
-            if (current.getOutgoingRequests().contains(user.getUserId())) {
+            if (current.getOutgoingRequests().containsKey(user.getUserId())) {
                 holder.addFriendButton.setText(R.string.cancel_request);
             }
         }

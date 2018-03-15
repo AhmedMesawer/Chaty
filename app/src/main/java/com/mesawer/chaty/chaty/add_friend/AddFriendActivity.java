@@ -5,17 +5,17 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.mesawer.chaty.chaty.R;
 import com.mesawer.chaty.chaty.base.BaseActivity;
+import com.mesawer.chaty.chaty.data.Action;
 import com.mesawer.chaty.chaty.data.User;
-import com.mesawer.chaty.chaty.main.MainActivity;
 import com.mesawer.chaty.chaty.utils.Injection;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,12 +78,6 @@ public class AddFriendActivity extends BaseActivity implements AddFriendContract
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
 
@@ -110,8 +104,8 @@ public class AddFriendActivity extends BaseActivity implements AddFriendContract
     }
 
     @Override
-    public void showUsers(User user) {
-        addFriendsAdapter.add(user);
+    public void showUsers(List<User> users) {
+        addFriendsAdapter.setFriends(users);
     }
 
     @Override

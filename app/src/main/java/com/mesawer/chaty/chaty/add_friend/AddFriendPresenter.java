@@ -21,28 +21,28 @@ public class AddFriendPresenter implements AddFriendContract.Presenter {
     @Override
     public void getUsers(User current) {
         addFriendView.showLoadingIndicator();
-        addFriendsDataSource.getUsers(current,
-                result -> {
-                    addFriendView.hideLoadingIndicator();
-                    addFriendView.showUsers(result);
-                },
-                errMsg -> {
-                    addFriendView.hideLoadingIndicator();
-                    addFriendView.showErrorMessage(errMsg);
-                });
+        addFriendsDataSource.getUsers(current)
+                .subscribe(users -> {
+                            addFriendView.hideLoadingIndicator();
+                            addFriendView.showUsers(users);
+                        },
+                        throwable -> {
+                            addFriendView.hideLoadingIndicator();
+                            addFriendView.showErrorMessage(throwable.getMessage());
+                        });
     }
 
     @Override
     public void sendFriendRequest(User current, User userToSend) {
-        addFriendsDataSource.sendFriendRequest(current, userToSend,
-                result -> addFriendView.changeAddFriendButtonText(result),
-                errMsg -> addFriendView.showErrorMessage(errMsg));
+        addFriendsDataSource.sendFriendRequest(current, userToSend)
+                .subscribe(addFriendView::changeAddFriendButtonText,
+                        throwable -> addFriendView.showErrorMessage(throwable.getMessage()));
     }
 
     @Override
     public void cancelFriendRequest(User current, User userToCancel) {
-        addFriendsDataSource.cancelFriendRequest(current, userToCancel,
-                result -> addFriendView.changeAddFriendButtonText(result),
-                errMsg -> addFriendView.showErrorMessage(errMsg));
+        addFriendsDataSource.cancelFriendRequest(current, userToCancel)
+        .subscribe(addFriendView::changeAddFriendButtonText,
+                throwable -> addFriendView.showErrorMessage(throwable.getMessage()));
     }
 }

@@ -1,8 +1,10 @@
 package com.mesawer.chaty.chaty.friendship_requests.model;
 
-import com.mesawer.chaty.chaty.base.FailedResponseCallback;
-import com.mesawer.chaty.chaty.base.SuccessfulResponseWithResultCallback;
 import com.mesawer.chaty.chaty.data.User;
+
+import java.util.List;
+
+import io.reactivex.Maybe;
 
 /**
  * Created by ilias on 08/03/2018.
@@ -10,11 +12,9 @@ import com.mesawer.chaty.chaty.data.User;
 
 public interface FriendRequestsDataSource {
 
-    void getFriendRequests(User user,
-                           SuccessfulResponseWithResultCallback<User> resultCallback,
-                           FailedResponseCallback failedCallback);
+    Maybe<List<User>> getFriendRequests(User user);
 
-    void sendFriendRequest(User current, User userToSend,
-                           SuccessfulResponseWithResultCallback<User> resultCallback,
-                           FailedResponseCallback failedCallback);
+    Maybe<User> acceptFriendRequest(User current, User userToAccept);
+
+    Maybe<User> ignoreFriendRequest(User current, User userToIgnore);
 }

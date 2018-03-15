@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
         initPagerAdapter();
         if (getIntent() != null) {
             user = getIntent().getParcelableExtra(CURRENT_USER_INTENT_KEY);
-            if (user != null)
-                Snackbar.make(mainLayout, user.getEmail(), Snackbar.LENGTH_LONG).show();
         }
     }
 
