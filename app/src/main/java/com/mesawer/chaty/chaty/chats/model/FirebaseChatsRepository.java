@@ -1,4 +1,4 @@
-package com.mesawer.chaty.chaty.friends.model;
+package com.mesawer.chaty.chaty.chats.model;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -12,45 +12,45 @@ import com.mesawer.chaty.chaty.utils.Injection;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Emitter;
 import io.reactivex.Maybe;
 
 /**
  * Created by ilias on 08/03/2018.
  */
 
-public class FirebaseFriendsRepository implements FriendsDataSource {
+public class FirebaseChatsRepository implements ChatsDataSource {
 
-    private static FirebaseFriendsRepository INSTANCE;
+    private static FirebaseChatsRepository INSTANCE;
     private FirebaseAuth auth;
     private DatabaseReference database;
 
-    private FirebaseFriendsRepository() {
+    private FirebaseChatsRepository() {
         auth = Injection.provideFirebaseAuth();
         database = Injection.provideFirebaseDatabaseReference().child("users");
     }
 
-    public static FirebaseFriendsRepository getInstance() {
-        if (INSTANCE == null) INSTANCE = new FirebaseFriendsRepository();
+    public static FirebaseChatsRepository getInstance() {
+        if (INSTANCE == null) INSTANCE = new FirebaseChatsRepository();
         return INSTANCE;
     }
 
     @Override
-    public Maybe<List<User>> getFriends(User user) {
+    public Maybe<List<User>> getChats(User user) {
 
         return Maybe.create(emitter -> {
             List<User> friends = new ArrayList<>();
-            database.child(user.getUserId()).child("friends")
+            database.child(user.getUserId()).child("chats")
                     .addChildEventListener(new ChildEventListener() {
                         @Override
-                        public void onChildAdded(DataSnapshot friendsSnapshot, String s) {
+                        public void onChildAdded(DataSnapshot chatsSnapshot, String s) {
                             friends.clear();
                             database.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot usersSnapshot) {
                                     for (DataSnapshot snapshot : usersSnapshot.getChildren()){
-                                        if (snapshot.getKey().equals(friendsSnapshot.getKey())){
+                                        if (snapshot.getKey().equals(chatsSnapshot.getKey())){
                                             User friend = snapshot.getValue(User.class);
+                                            friend.setChat_id(snapshot.getValue(String.class));
                                             friends.add(friend);
                                         }
                                     }

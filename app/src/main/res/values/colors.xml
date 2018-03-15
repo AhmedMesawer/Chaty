@@ -2,9 +2,11 @@
 <resources>
     <color name="primaryColor">#03a9f4</color>
     <color name="primaryLightColor">#67daff</color>
+    <color name="primaryChatColor">#a3fdff</color>
     <color name="primaryDarkColor">#007ac1</color>
     <color name="secondaryColor">#263238</color>
     <color name="secondaryLightColor">#4f5b62</color>
+    <color name="backgroundTransparent">#20e1e2e1</color>
     <color name="backgroundColor">#e1e2e1</color>
     <color name="secondaryDarkColor">#000a12</color>
     <color name="primaryTextColor">#000000</color>

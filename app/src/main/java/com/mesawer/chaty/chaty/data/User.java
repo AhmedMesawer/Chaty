@@ -23,6 +23,7 @@ public class User implements Parcelable {
     private Map<String, String> chats = new HashMap<>();
     private Map<String, String> outgoingRequests = new HashMap<>();
     private Map<String, String> incomingRequests = new HashMap<>();
+    private String chat_id = "";
 
     public User() {
     }
@@ -102,6 +103,14 @@ public class User implements Parcelable {
 
         if (incomingRequests != null && incomingRequests.containsKey(friendRequest))
             incomingRequests.remove(friendRequest);
+    }
+
+    public String getChat_id() {
+        return chat_id;
+    }
+
+    public void setChat_id(String chat_id) {
+        this.chat_id = chat_id;
     }
 
     //endregion

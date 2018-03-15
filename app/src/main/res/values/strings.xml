@@ -8,4 +8,5 @@
     <string name="cancel_request">Cancel Request</string>
     <string name="accept">Accept</string>
     <string name="ignore">Ignore</string>
+    <string name="write_a_message">write a message</string>
 </resources>
