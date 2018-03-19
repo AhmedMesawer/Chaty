@@ -4,11 +4,12 @@
     android:layout_height="match_parent"
     android:id="@+id/chats_layout"
     style="@style/layoutMargins"
-    tools:context="com.mesawer.chaty.chaty.chats.ChatsFragment">
+    tools:context="com.mesawer.chaty.chaty.messages.ChatsFragment">
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chats_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </FrameLayout>

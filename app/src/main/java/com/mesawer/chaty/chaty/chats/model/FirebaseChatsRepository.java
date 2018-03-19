@@ -50,7 +50,7 @@ public class FirebaseChatsRepository implements ChatsDataSource {
                                     for (DataSnapshot snapshot : usersSnapshot.getChildren()){
                                         if (snapshot.getKey().equals(chatsSnapshot.getKey())){
                                             User friend = snapshot.getValue(User.class);
-                                            friend.setChat_id(snapshot.getValue(String.class));
+                                            friend.setChat_id(chatsSnapshot.getValue(String.class));
                                             friends.add(friend);
                                         }
                                     }

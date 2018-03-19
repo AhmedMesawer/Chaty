@@ -12,9 +12,9 @@ import java.util.List;
 public interface ChatsContract {
 
     interface View extends IView{
-        void showChats(List<User> friend);
+        void showChats(List<User> chats);
 
-        void navigateToChattingActivity();
+        void navigateToChattingActivity(User friend);
 
     }
 

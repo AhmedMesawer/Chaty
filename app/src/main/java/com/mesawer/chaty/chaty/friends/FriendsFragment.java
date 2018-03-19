@@ -10,7 +10,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import android.widget.FrameLayout;
 import com.mesawer.chaty.chaty.R;
 import com.mesawer.chaty.chaty.add_friend.AddFriendActivity;
 import com.mesawer.chaty.chaty.base.BaseFragment;
+import com.mesawer.chaty.chaty.chatting.ChattingActivity;
 import com.mesawer.chaty.chaty.data.User;
 import com.mesawer.chaty.chaty.utils.Injection;
 
@@ -29,9 +29,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
 
 import static android.app.Activity.RESULT_OK;
 import static com.mesawer.chaty.chaty.add_friend.AddFriendActivity.ADD_FRIEND_REQUEST_CODE;
+import static com.mesawer.chaty.chaty.chatting.ChattingActivity.FRIEND_INTENT_KEY;
 import static com.mesawer.chaty.chaty.main.MainActivity.CURRENT_USER_INTENT_KEY;
 import static com.mesawer.chaty.chaty.main.MainActivity.SHARED_PREFERENCES_FILE_KEY;
 
@@ -53,6 +56,8 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
     @BindView(R.id.floatingActionButton)
     FloatingActionButton floatingActionButton;
     private SharedPreferences preferences;
+    private PublishSubject<User> friendClickedObserver = PublishSubject.create();
+    private Disposable disposable;
 
     public FriendsFragment() {
         // Required empty public constructor
@@ -85,7 +90,7 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_FRIEND_REQUEST_CODE && resultCode == RESULT_OK){
+        if (requestCode == ADD_FRIEND_REQUEST_CODE && resultCode == RESULT_OK) {
             user = data.getParcelableExtra(CURRENT_USER_INTENT_KEY);
         }
     }
@@ -96,11 +101,20 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
         if (user != null) {
             friendPresenter.getFriends(user);
         }
+        disposable = friendClickedObserver.subscribe(this::navigateToChattingActivity);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        disposable.dispose();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         unbinder.unbind();
     }
 
@@ -110,8 +124,11 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
     }
 
     @Override
-    public void navigateToChatActivity(User friend) {
-
+    public void navigateToChattingActivity(User friend) {
+        Intent intent = new Intent(getActivity(), ChattingActivity.class);
+        intent.putExtra(CURRENT_USER_INTENT_KEY, user);
+        intent.putExtra(FRIEND_INTENT_KEY, friend);
+        startActivity(intent);
     }
 
     @Override
@@ -123,7 +140,7 @@ public class FriendsFragment extends BaseFragment implements FriendsContract.Vie
 
     private void setupFriendsRecyclerView() {
         llm = new LinearLayoutManager(getContext());
-        friendsAdapter = new FriendsAdapter(new ArrayList<>());
+        friendsAdapter = new FriendsAdapter(new ArrayList<>(), friendClickedObserver);
         friendsRv.setLayoutManager(llm);
         friendsRv.setAdapter(friendsAdapter);
     }

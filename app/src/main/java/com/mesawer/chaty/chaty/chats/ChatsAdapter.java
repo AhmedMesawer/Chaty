@@ -39,7 +39,9 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
     @Override
     public void onBindViewHolder(ChatsViewHolder holder, int position) {
-        User user = chats.get(position);
+        User friend = chats.get(position);
+        holder.friendNameTextView.setText(friend.getUserName());
+        holder.itemView.setOnClickListener(view -> chatClickedObservable.onNext(friend));
     }
 
     @Override

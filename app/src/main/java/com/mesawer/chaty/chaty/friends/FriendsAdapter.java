@@ -25,13 +25,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
     private List<User> friends;
     private PublishSubject<User> friendClickedObservable;
 
-//    public FriendsAdapter(List<User> friends, PublishSubject<User> friendClickedObservable) {
-//        this.friends = friends;
-//        this.friendClickedObservable = friendClickedObservable;
-//    }
-
-    public FriendsAdapter(List<User> friends) {
+    public FriendsAdapter(List<User> friends, PublishSubject<User> friendClickedObservable) {
         this.friends = friends;
+        this.friendClickedObservable = friendClickedObservable;
     }
 
     @Override
@@ -43,9 +39,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
 
     @Override
     public void onBindViewHolder(FriendsViewHolder holder, int position) {
-        User user = friends.get(position);
-        holder.friendNameTextView.setText(user.getUserName());
-//        holder.itemView.setOnClickListener(view -> friendClickedObservable.onNext(user));
+        User friend = friends.get(position);
+        holder.friendNameTextView.setText(friend.getUserName());
+        holder.itemView.setOnClickListener(view -> friendClickedObservable.onNext(friend));
     }
 
     @Override

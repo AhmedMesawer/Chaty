@@ -14,7 +14,7 @@ public interface FriendsContract {
     interface View extends IView{
         void showFriends(List<User> friend);
 
-        void navigateToChatActivity(User friend);
+        void navigateToChattingActivity(User friend);
 
         void navigateToAddFriendActivity();
 

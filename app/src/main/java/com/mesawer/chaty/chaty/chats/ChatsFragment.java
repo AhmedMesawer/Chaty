@@ -16,6 +16,7 @@ import com.mesawer.chaty.chaty.R;
 import com.mesawer.chaty.chaty.base.BaseFragment;
 import com.mesawer.chaty.chaty.chatting.ChattingActivity;
 import com.mesawer.chaty.chaty.data.User;
+import com.mesawer.chaty.chaty.utils.Injection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
+
+import static com.mesawer.chaty.chaty.chatting.ChattingActivity.FRIEND_INTENT_KEY;
+import static com.mesawer.chaty.chaty.main.MainActivity.CURRENT_USER_INTENT_KEY;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +43,10 @@ public class ChatsFragment extends BaseFragment implements ChatsContract.View {
     FrameLayout chatsLayout;
     ChatsAdapter chatsAdapter;
     LinearLayoutManager llm;
-    private PublishSubject<User> chatClickedObserver;
+    private PublishSubject<User> chatClickedObserver = PublishSubject.create();
+    private User current;
+    private Disposable disposable;
+    private ChatsContract.Presenter chatsPresenter;
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -51,15 +59,36 @@ public class ChatsFragment extends BaseFragment implements ChatsContract.View {
         View view = inflater.inflate(R.layout.fragment_chats, container, false);
         unbinder = ButterKnife.bind(this, view);
         super.view = chatsLayout;
+        chatsPresenter = new ChatsPresenter(this,
+                Injection.provideFirebaseChatsRepository());
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Intent intent = getActivity().getIntent();
+        if (intent != null)
+            current = intent.getParcelableExtra(CURRENT_USER_INTENT_KEY);
         setupFriendsRecyclerView();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (current != null)
+            chatsPresenter.getChats(current);
+        disposable = chatClickedObserver.subscribe(this::navigateToChattingActivity);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        disposable.dispose();
+    }
 
     @Override
     public void onDestroyView() {
@@ -68,14 +97,15 @@ public class ChatsFragment extends BaseFragment implements ChatsContract.View {
     }
 
     @Override
-    public void showChats(List<User> friend) {
-
+    public void showChats(List<User> chats) {
+        chatsAdapter.setChats(chats);
     }
 
     @Override
-    public void navigateToChattingActivity() {
+    public void navigateToChattingActivity(User friend) {
         Intent intent = new Intent(getActivity(), ChattingActivity.class);
-//        intent.putExtra();
+        intent.putExtra(CURRENT_USER_INTENT_KEY, current);
+        intent.putExtra(FRIEND_INTENT_KEY, friend);
         startActivity(intent);
     }
 

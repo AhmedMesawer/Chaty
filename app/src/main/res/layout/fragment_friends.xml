@@ -5,7 +5,7 @@
     style="@style/layoutMargins"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mesawer.chaty.chaty.chats.FriendsFragment">
+    tools:context="com.mesawer.chaty.chaty.messages.FriendsFragment">
 
 
     <android.support.design.widget.FloatingActionButton

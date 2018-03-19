@@ -3,6 +3,8 @@ package com.mesawer.chaty.chaty.chats;
 import com.mesawer.chaty.chaty.chats.model.ChatsDataSource;
 import com.mesawer.chaty.chaty.data.User;
 
+import io.reactivex.Observable;
+
 /**
  * Created by ilias on 15/03/2018.
  */
