@@ -98,7 +98,34 @@ public class FirebaseChattingRepository implements ChattingDataSource {
 
     @Override
     public void newMessage(User current, User friend, Message message) {
-        database.child("chats").child(current.getUserId() + friend.getUserId())
+        if (!isChatExist(current, friend)){
+            database.child("users")
+                    .child(current.getUserId())
+                    .child("chats")
+                    .child(friend.getUserId())
+                    .setValue(current.getUserId() + friend.getUserId());
+
+            database.child("users")
+                    .child(friend.getUserId())
+                    .child("chats")
+                    .child(current.getUserId())
+                    .setValue(current.getUserId() + friend.getUserId())
+                    .addOnCompleteListener(
+                            task -> {
+                                current.getChats()
+                            .put(friend.getUserId(), current.getUserId() + friend.getUserId());
+                                current.setChat_id(current.getUserId() + friend.getUserId());
+                            });
+        }
+        database.child("chats").child(current.getChat_id())
                 .child("messages").push().setValue(message);
+    }
+
+    private boolean isChatExist(User current, User friend) {
+        if (current.getChats().containsKey(friend.getUserId())) {
+            current.setChat_id(current.getChats().get(friend.getUserId()));
+            return true;
+        }
+        return false;
     }
 }

@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.mesawer.chaty.chaty.R;
 import com.mesawer.chaty.chaty.data.User;
 
@@ -40,6 +42,12 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
     @Override
     public void onBindViewHolder(ChatsViewHolder holder, int position) {
         User friend = chats.get(position);
+        if (friend.getPhotoUrl() != null) {
+            Glide.with(holder.friendProfileImageView.getContext())
+                    .load(friend.getPhotoUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(holder.friendProfileImageView);
+        }
         holder.friendNameTextView.setText(friend.getUserName());
         holder.itemView.setOnClickListener(view -> chatClickedObservable.onNext(friend));
     }

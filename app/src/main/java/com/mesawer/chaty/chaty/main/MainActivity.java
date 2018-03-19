@@ -8,10 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import com.mesawer.chaty.chaty.R;
 import com.mesawer.chaty.chaty.data.User;
+import com.mesawer.chaty.chaty.profile.ProfileActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +48,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.profile_item:
+                navigateToProfileActivity();
+                return true;
+            case R.id.sign_out_item:
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void navigateToProfileActivity() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra(CURRENT_USER_INTENT_KEY, user.getUserId());
+        startActivity(intent);
     }
 
     @Override

@@ -41,7 +41,9 @@
         <activity
             android:name=".add_friend.AddFriendActivity"
             android:parentActivityName=".main.MainActivity" />
-        <activity android:name=".chatting.ChattingActivity"></activity>
+        <activity android:name=".chatting.ChattingActivity"
+            android:parentActivityName=".main.MainActivity"/>
+        <activity android:name=".profile.ProfileActivity"/>
     </application>
 
 </manifest>

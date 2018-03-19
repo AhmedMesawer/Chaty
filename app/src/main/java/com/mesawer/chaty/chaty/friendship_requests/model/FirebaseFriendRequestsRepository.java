@@ -48,7 +48,7 @@ public class FirebaseFriendRequestsRepository implements FriendRequestsDataSourc
                                 @Override
                                 public void onDataChange(DataSnapshot usersSnapshot) {
                                     for (DataSnapshot snapshot : usersSnapshot.getChildren()) {
-                                        if (snapshot.getKey().equals(incomingSnapshot.getKey())){
+                                        if (snapshot.getKey().equals(incomingSnapshot.getKey())) {
                                             friendRequests.add(snapshot.getValue(User.class));
                                         }
                                     }
@@ -84,34 +84,34 @@ public class FirebaseFriendRequestsRepository implements FriendRequestsDataSourc
 //        current.addOutgoingRequest(userToAccept.getUserId());
         return Maybe.create(
                 emitter -> database.child(current.getUserId()).child("friends")
-                .child(userToAccept.getUserId())
-                .setValue(new Date().toString())
-                .addOnCompleteListener(
-                        task -> {
-                            if (task.isSuccessful()) {
-                                //region add current as a friend
-                                database.child(userToAccept.getUserId()).child("friends")
-                                        .child(current.getUserId())
-                                        .setValue(new Date().toString())
-                                        .addOnCompleteListener(
-                                                t -> {
-                                                    if (t.isSuccessful()) {
-                                                        database.child(current.getUserId())
-                                                                .child("incomingRequests")
-                                                                .child(userToAccept.getUserId())
-                                                                .removeValue();
+                        .child(userToAccept.getUserId())
+                        .setValue(new Date().toString())
+                        .addOnCompleteListener(
+                                task -> {
+                                    if (task.isSuccessful()) {
+                                        //region add current as a friend
+                                        database.child(userToAccept.getUserId()).child("friends")
+                                                .child(current.getUserId())
+                                                .setValue(new Date().toString())
+                                                .addOnCompleteListener(
+                                                        t -> {
+                                                            if (t.isSuccessful()) {
+                                                                database.child(current.getUserId())
+                                                                        .child("incomingRequests")
+                                                                        .child(userToAccept.getUserId())
+                                                                        .removeValue();
 
-                                                        database.child(userToAccept.getUserId())
-                                                                .child("outgoingRequests")
-                                                                .child(current.getUserId())
-                                                                .removeValue();
-                                                        emitter.onSuccess(userToAccept);
-                                                    }
-                                                });
-                                //endregion
-                            }
-                        })
-                .addOnFailureListener(emitter::onError));
+                                                                database.child(userToAccept.getUserId())
+                                                                        .child("outgoingRequests")
+                                                                        .child(current.getUserId())
+                                                                        .removeValue();
+                                                                emitter.onSuccess(userToAccept);
+                                                            }
+                                                        });
+                                        //endregion
+                                    }
+                                })
+                        .addOnFailureListener(emitter::onError));
     }
 
     @Override
@@ -123,10 +123,8 @@ public class FirebaseFriendRequestsRepository implements FriendRequestsDataSourc
 
             database.child(userToIgnore.getUserId()).child("outgoingRequests")
                     .child(current.getUserId())
-                    .removeValue((databaseError, databaseReference) -> {
-                        emitter.onSuccess(userToIgnore);
-                        emitter.onError(databaseError.toException());
-                    });
+                    .removeValue(
+                            (databaseError, databaseReference) -> emitter.onSuccess(userToIgnore));
         });
     }
 }

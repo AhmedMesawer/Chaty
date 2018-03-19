@@ -21,21 +21,17 @@ public class ChattingPresenter implements ChattingContract.Presenter {
 
     @Override
     public void getChat(User current, User friend) {
-        if (isChatExist(current, friend)) {
+        if (isChatExist(current, friend))
             chattingView.showLoadingIndicator();
-            chattingDataSource.getMessages(current, friend)
-                    .subscribe(message -> {
-                                chattingView.hideLoadingIndicator();
-                                chattingView.showMessages(message);
-                            },
-                            throwable -> {
-                                chattingView.hideLoadingIndicator();
-                                chattingView.showErrorMessage(throwable.getMessage());
-                            });
-        } else {
-
-            chattingDataSource.createChat(current, friend);
-        }
+        chattingDataSource.getMessages(current, friend)
+                .subscribe(message -> {
+                            chattingView.hideLoadingIndicator();
+                            chattingView.showMessages(message);
+                        },
+                        throwable -> {
+                            chattingView.hideLoadingIndicator();
+                            chattingView.showErrorMessage(throwable.getMessage());
+                        });
     }
 
     @Override
@@ -47,7 +43,7 @@ public class ChattingPresenter implements ChattingContract.Presenter {
         if (current.getChats().containsKey(friend.getUserId())) {
             current.setChat_id(current.getChats().get(friend.getUserId()));
             return true;
-        }
-        return false;
+        } else current.setChat_id(current.getUserId() + friend.getUserId());
+            return false;
     }
 }

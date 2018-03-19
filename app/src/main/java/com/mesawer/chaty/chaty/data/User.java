@@ -19,6 +19,7 @@ public class User implements Parcelable {
     private String userName;
     private String email;
     private String password;
+    private String photoUrl;
     private Map<String, String> friends = new HashMap<>();
     private Map<String, String> chats = new HashMap<>();
     private Map<String, String> outgoingRequests = new HashMap<>();
@@ -105,6 +106,14 @@ public class User implements Parcelable {
             incomingRequests.remove(friendRequest);
     }
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
     public String getChat_id() {
         return chat_id;
     }
@@ -116,7 +125,6 @@ public class User implements Parcelable {
     //endregion
 
     //region Parcelable
-
     @Override
     public int describeContents() {
         return 0;
@@ -128,6 +136,7 @@ public class User implements Parcelable {
         dest.writeString(this.userName);
         dest.writeString(this.email);
         dest.writeString(this.password);
+        dest.writeString(this.photoUrl);
         dest.writeInt(this.friends.size());
         for (Map.Entry<String, String> entry : this.friends.entrySet()) {
             dest.writeString(entry.getKey());
@@ -148,6 +157,7 @@ public class User implements Parcelable {
             dest.writeString(entry.getKey());
             dest.writeString(entry.getValue());
         }
+        dest.writeString(this.chat_id);
     }
 
     protected User(Parcel in) {
@@ -155,6 +165,7 @@ public class User implements Parcelable {
         this.userName = in.readString();
         this.email = in.readString();
         this.password = in.readString();
+        this.photoUrl = in.readString();
         int friendsSize = in.readInt();
         this.friends = new HashMap<String, String>(friendsSize);
         for (int i = 0; i < friendsSize; i++) {
@@ -183,6 +194,7 @@ public class User implements Parcelable {
             String value = in.readString();
             this.incomingRequests.put(key, value);
         }
+        this.chat_id = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -197,5 +209,4 @@ public class User implements Parcelable {
         }
     };
     //endregion
-
 }

@@ -9,4 +9,6 @@
     <string name="accept">Accept</string>
     <string name="ignore">Ignore</string>
     <string name="write_a_message">write a message</string>
+    <string name="profile">Profile</string>
+    <string name="sign_out">Sign out</string>
 </resources>

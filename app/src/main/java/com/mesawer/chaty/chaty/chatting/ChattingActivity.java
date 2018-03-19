@@ -3,8 +3,10 @@ package com.mesawer.chaty.chaty.chatting;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -51,6 +53,9 @@ public class ChattingActivity extends BaseActivity implements ChattingContract.V
         super.view = messagesLayout;
         chattingPresenter = new ChattingPresenter(this,
                 Injection.provideFirebaseChattingRepository());
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         Intent intent = getIntent();
         if (intent != null) {
             current = intent.getParcelableExtra(CURRENT_USER_INTENT_KEY);
@@ -68,8 +73,20 @@ public class ChattingActivity extends BaseActivity implements ChattingContract.V
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void showMessages(Message message) {
         messagesAdapter.add(message);
+        messagesRv.smoothScrollToPosition(messagesAdapter.getItemCount());
     }
 
     @Override
@@ -96,7 +113,6 @@ public class ChattingActivity extends BaseActivity implements ChattingContract.V
         switch (view.getId()) {
             case R.id.send_button:
                 sendMessage();
-                messagesRv.smoothScrollToPosition(messagesAdapter.getItemCount());
                 break;
             case R.id.load_img_button:
                 break;

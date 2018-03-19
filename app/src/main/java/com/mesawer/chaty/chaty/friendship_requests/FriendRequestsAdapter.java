@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.mesawer.chaty.chaty.R;
 import com.mesawer.chaty.chaty.data.Action;
 import com.mesawer.chaty.chaty.data.User;
@@ -45,6 +47,12 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
     @Override
     public void onBindViewHolder(FriendRequestsViewHolder holder, int position) {
         User friendRequest = friendRequests.get(position);
+        if (friendRequest.getPhotoUrl() != null) {
+            Glide.with(holder.friendRequestProfileImageView.getContext())
+                    .load(friendRequest.getPhotoUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(holder.friendRequestProfileImageView);
+        }
         holder.friendRequestTextView.setText(friendRequest.getUserName());
         Action action = new Action(friendRequest);
         holder.acceptFriendRequestButton.setOnClickListener(

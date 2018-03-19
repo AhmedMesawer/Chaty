@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.mesawer.chaty.chaty.R;
 import com.mesawer.chaty.chaty.data.User;
 
@@ -40,6 +42,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
     @Override
     public void onBindViewHolder(FriendsViewHolder holder, int position) {
         User friend = friends.get(position);
+        if (friend.getPhotoUrl() != null) {
+            Glide.with(holder.friendProfileImageView.getContext())
+                    .load(friend.getPhotoUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(holder.friendProfileImageView);
+        }
         holder.friendNameTextView.setText(friend.getUserName());
         holder.itemView.setOnClickListener(view -> friendClickedObservable.onNext(friend));
     }
